@@ -97,22 +97,43 @@
 
         <div class="portfolio-grid">
 
-            <div class="portfolio-card">
-                <img src="images/travellybanner.png">
+            <div class="portfolio-card design" 
+                data-title="Travel with Travelly (Digital Banner)"
+                data-image="images/travellybanner.png"
+                data-gallery="image::images/travellybanner.png"
+                data-rationale="The theme of this banner is 'Travel with Travelly', aiming to promote excitement and exploration of global destinations."
+                data-software="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Adobe_Photoshop_CC_icon.svg/2101px-Adobe_Photoshop_CC_icon.svg.png"
+                data-difficulty="1/5"
+                data-learning="I learned how to blend multiple images, crop efficiently and create a cohesive travel banner.">
+                <img src="images/travellybanner.png" alt="Travel with Travelly banner">
                 <p>Designing a digital banner for a travelly</p>
-                <button class="yellow-btn">Read Me!</button>
+                <button class="yellow-btn readme-btn">Read Me!</button>
             </div>
 
-            <div class="portfolio-card">
-                <img src="images/instagramgrid.png">
+            <div class="portfolio-card design"
+                data-title="Instagram Marketing Grid"
+                data-image="images/instagramgrid.png"
+                data-gallery="image::images/instagramgrid.png"
+                data-rationale="This Instagram grid provides a cohesive visual identity for travel marketing through layout design and color theory."
+                data-software="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Adobe_Photoshop_CC_icon.svg/2101px-Adobe_Photoshop_CC_icon.svg.png"
+                data-difficulty="2/5"
+                data-learning="I learned composition, layout spacing and branding consistency across multiple tiles.">
+                <img src="images/instagramgrid.png" alt="Instagram Marketing Grid">
                 <p>Designing an Instagram post for a travel agency</p>
-                <button class="yellow-btn">Read Me!</button>
+                <button class="yellow-btn readme-btn">Read Me!</button>
             </div>
 
-            <div class="portfolio-card">
-                <img src="images/vr.png">
+            <div class="portfolio-card immersive"
+                data-title="VR Escape Room (Unity)"
+                data-image="images/vr.png"
+                data-gallery="video::images/Ancient Escape Recording.mp4||image::images/torch.png||image::images/barrel.png||image::images/hammer.png||image::images/chest.png"
+                data-rationale="A VR escape room game built with Unity using puzzle mechanics, lighting, and immersive interactions. Inspirational References: Tomb Raider (environmental puzzles), The Room VR (physical interaction & immersion), Indiana Jones (temple exploration and ancient mystery), Real-world inspiration: Angkor Wat, Machu Picchu, Egyptian tomb architecture"
+                data-software="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjCin5lnVSg8gVjRCcYLdcpILbCHRMTjsv9Q&s"
+                data-difficulty="4/5"
+                data-learning="Through this project, I learned not only technical skills such as XR interactions and VR environment setup, but also core game design principles including environmental storytelling, puzzle flow design, and player guidance without traditional UI.">
+                <img src="images/vr.png" alt="VR Escape Room">
                 <p>Made a VR escape room game using Unity</p>
-                <button class="yellow-btn">Read Me!</button>
+                <button class="yellow-btn readme-btn">Read Me!</button>
             </div>
 
         </div>
@@ -148,6 +169,168 @@
         © 2025 Kingston Lim
     </footer>
 
+    <!-- PROJECT POPUP MODAL -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+
+            <h2 id="modalTitle"></h2>
+            <div id="modalViewer">
+                <img id="modalImage" src="" alt="">
+                <video id="modalVideo" controls style="display:none;"></video>
+            </div>
+
+            <div id="modalGallery" class="learning-gallery" aria-label="Project media gallery"></div>
+
+            <div class="modal-columns">
+
+                <div class="modal-left">
+                    <h3>Design Rationale:</h3>
+                    <p id="modalRationale"></p>
+                </div>
+
+                <div class="modal-right">
+                    <h3>Software used:</h3>
+                    <img id="modalSoftware" class="software-icon">
+
+                    <h3>Difficulty Rating:</h3>
+                    <p id="modalDifficulty"></p>
+
+                    <h3>What I learned:</h3>
+                    <p id="modalLearning"></p>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button id="closeModal" class="yellow-btn">Back to Portfolio</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL JAVASCRIPT -->
+    <script>
+        const modal = document.getElementById("projectModal");
+        const closeModal = document.getElementById("closeModal");
+        const modalImage = document.getElementById("modalImage");
+        const modalVideo = document.getElementById("modalVideo");
+        const modalGallery = document.getElementById("modalGallery");
+
+        function clearGallery() {
+            modalGallery.innerHTML = "";
+        }
+
+        function createThumb(item) {
+            const thumb = document.createElement('div');
+            thumb.className = 'learning-thumb';
+            const img = document.createElement('img');
+
+            if (!item.url) {
+                img.src = 'images/image_placeholder.png';
+                thumb.classList.add('invalid');
+            } else {
+                img.src = item.type === 'image' ? item.url : (item.thumb || 'images/video_placeholder.png');
+            }
+
+            img.alt = '';
+            thumb.appendChild(img);
+
+            if (item.type === 'video') {
+                const play = document.createElement('span');
+                play.className = 'video-play';
+                play.innerHTML = '&#9658;';
+                thumb.appendChild(play);
+            }
+
+            thumb.addEventListener('click', () => {
+                if (!item.url) return;
+
+                modalGallery.querySelectorAll('.learning-thumb').forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
+
+                if (item.type === 'image') {
+                    modalVideo.pause();
+                    modalVideo.style.display = 'none';
+                    modalImage.style.display = 'block';
+                    modalImage.src = item.url;
+                } else if (item.type === 'video') {
+                    modalImage.style.display = 'none';
+                    modalVideo.style.display = 'block';
+                    modalVideo.src = item.url;
+                    modalVideo.play();
+                }
+
+                thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            });
+
+            modalGallery.appendChild(thumb);
+        }
+
+        document.querySelectorAll(".readme-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+
+                const card = e.target.closest(".portfolio-card");
+
+                document.getElementById("modalTitle").innerText = card.dataset.title;
+                modalImage.src = card.dataset.image || '';
+                modalImage.style.display = 'block';
+                modalVideo.style.display = 'none';
+
+                document.getElementById("modalRationale").innerText = card.dataset.rationale;
+                document.getElementById("modalSoftware").src = card.dataset.software;
+                document.getElementById("modalDifficulty").innerText = card.dataset.difficulty;
+                document.getElementById("modalLearning").innerText = card.dataset.learning;
+
+                clearGallery();
+                const galleryData = card.dataset.gallery;
+                const parsedItems = [];
+
+                if (galleryData) {
+                    galleryData.split('||').forEach((entry) => {
+                        const type = entry.split('::')[0].trim();
+                        const url = entry.split('::')[1]?.trim();
+                        if (type && url) {
+                            parsedItems.push({ type, url });
+                        }
+                    });
+                }
+
+                if (parsedItems.length) {
+                    parsedItems.forEach((item, idx) => {
+                        createThumb(item);
+                        if (idx === 0) {
+                            modalGallery.querySelector('.learning-thumb').click();
+                        }
+                    });
+                } else {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'learning-thumb active';
+                    const img = document.createElement('img');
+                    img.src = card.dataset.image;
+                    thumb.appendChild(img);
+                    modalGallery.appendChild(thumb);
+                }
+
+                modal.style.display = "flex";
+                document.querySelector('.modal-content').scrollTop = 0;
+            });
+        });
+
+        closeModal.onclick = () => {
+            modal.style.display = "none";
+            modalVideo.pause();
+            modalVideo.src = '';
+            document.querySelector('.modal-content').scrollTop = 0;
+        };
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+                modalVideo.pause();
+                modalVideo.src = '';
+                document.querySelector('.modal-content').scrollTop = 0;
+            }
+        });
+    </script>
 
 </body>
 
